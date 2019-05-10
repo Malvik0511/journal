@@ -1,0 +1,27 @@
+.fixed-center{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.toolteep-btn__tooltip-content{
+    background: #235087;
+    color: white
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.absolute{
+    position: absolute;
+}
+
+.relative{
+    position: relative;
+}
+
+.fixed{
+    position: fixed
+}

@@ -1,0 +1,18 @@
+.layout{
+    color: white;
+}
+
+.layout__toolbar, .layout__content{
+    background: #0E1A2C !important;
+}
+
+.layout__content{
+    padding: 10px;
+}
+
+.layout__block_fixed{
+    position: fixed;
+    top: 100%;
+    left: 100%;
+    transform: translate(-100%, -100%);
+}

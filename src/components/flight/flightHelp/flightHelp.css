@@ -1,0 +1,12 @@
+.v-window{
+    border: 1px solid white;
+    border-top: none;
+}
+
+.v-card__text{
+    color: white;
+}
+
+.flight-help__tab_active{
+    border-bottom: 2px solid white;
+}

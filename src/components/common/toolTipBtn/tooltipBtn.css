@@ -1,0 +1,6 @@
+@media (max-width: 960px){
+    button{
+        width:36px;
+        min-width:36px !important;
+    }
+}
