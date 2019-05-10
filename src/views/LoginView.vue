@@ -10,8 +10,7 @@
 
 <script>
     import Layout from "../components/layout/Layout";
-    import NavigationNotFound from "../components/navigation/navigationNotFound/NavigationNotFound";
-    import Auth from "../components/auth/Auth"
+    import Auth from "../components/auth/Auth";
 
     export default {
 
@@ -19,7 +18,6 @@
 
         components:{
             Layout,
-            NavigationNotFound,
             Auth
         },
 

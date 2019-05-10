@@ -1,9 +1,21 @@
 const express = require('express'),
     app = express(),
     flight = require("./controllers/flight"),
-    auth = require("./controllers/auth")
+    auth = require("./controllers/auth"),
     port = 8000,
-    session = require("express-session");
+    session = require("express-session"),
+    mongoose = require("mongoose"),
+    mongoUrl = `mongodb://admin:admin@localhost:27017/journal`;
+
+mongoose.connect(
+    mongoUrl,
+    {
+        useNewUrlParser: true,
+        useCreateIndex: true
+    }
+).then(() => console.log("Successfully connected to mongodb"))
+    .catch(err => console.log(`Cannot connect to database. Error: ${err}`));
+
 
 app.use(express.json());
 

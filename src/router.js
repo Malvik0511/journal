@@ -9,6 +9,13 @@ import LoginView from "./views/LoginView";
 import { roles } from "./modules/constant";
 import store from "./store/index";
 
+const accesses = {
+  teacher: [roles.TEACHER],
+  admin: [roles.ADMIN],
+  all: [roles.TEACHER, roles.ADMIN],
+  closed: null
+};
+
 Vue.use(Router);
 
 const routes = [
@@ -16,32 +23,32 @@ const routes = [
     name: "home",
     path: "/",
     redirect: { name: 'teachers' },
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, access: accesses.all }
    }, {
     name: "login",
     path: "/login",
     component: LoginView,
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: false, access: accesses.all }
   }, {
     name: "teachers",
     path: "/teachers",
     component: TeacherListView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, access: accesses.admin }
   }, {
     name: "departure",
     path: "/departure/:id",
     component: TeacherView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, access: accesses.all }
   }, {
     name: "arrival",
     path: "/arrival/:id",
     component: TeacherView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, access: accesses.all }
   }, {
     name: "404",
     path: "/*",
     component: NotFoundView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, access: accesses.all}
   },
 ];
 
@@ -51,20 +58,41 @@ const router = new Router({
   routes
 });
 
+const forAuth = (to, next, user) => {
+  if ("access" in to.meta){
+    if (to.meta.access.includes(user)){
+      next();
+    } else {
+      if (to.meta.replace && to.meta.replace[user]){
+        next(to.meta.replace[user]);
+      } else {
+        next({ name: "404" });
+      }
+    }
+  } else {
+    next({ name: "404" });
+  }
+};
+
 router.beforeEach((to, from, next) => {
-  let user= store.getters.authUser;
+  let user = store.getters.authUser,
+      role = user && user.role;
   // если для пути требуется авторизация проверяем загружен ли user
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!user) {
       store.dispatch("getSessionUser")
-          .then(next)
+          .then(() => {
+            role = user.role;
+            forAuth(to, next, role);
+          })
           .catch(() => next({ name: "login" }))
     } else {
-      next();
+      forAuth(to, next, role);
     }
   } else {
     next();
   }
 });
+
 
 export default router;
