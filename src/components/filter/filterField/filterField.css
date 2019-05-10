@@ -1,10 +1,10 @@
-.v-input{
+.filter-field.v-input{
     right: 40px;
     width: 40vw;
 }
 
 @media (max-width: 960px){
-    .v-input{
+    .filter-field.v-input{
         width:55vw;
     }
 }

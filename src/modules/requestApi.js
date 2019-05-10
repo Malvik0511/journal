@@ -10,8 +10,7 @@ let RequestApi = {};
  * @param params
  * @returns {Promise<any>}
  */
-RequestApi.request = params => {
-    return new Promise((resolve, reject) => {
+RequestApi.request = params =>
         axios({
             url: `/api/${params.additional.url}`,
             method: params.additional.method || "POST",
@@ -21,11 +20,7 @@ RequestApi.request = params => {
             data: (!params.additional.method || params.additional.method === "POST") && (params.body || {}),
             params: (params.additional.method === "GET") && (params.body || {})
         })
-            .then(response => {
-                resolve(response.data)
-            })
-            .catch(error => reject(error.response));
-    });
-};
+            .then(response => response.data)
+            .catch(error => Promise.reject(error.response));
 
 export default RequestApi;

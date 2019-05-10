@@ -6,7 +6,8 @@ import flights from "./modules/flights";
 import filters from "./modules/filters";
 import navigation from "./modules/navigation";
 import popup from "./modules/popup";
-import auth from "./modules/auth"
+import auth from "./modules/auth";
+import users from "./modules/users";
 
 
 Vue.use(Vuex);
@@ -27,6 +28,7 @@ export default new Vuex.Store({
         filters,
         navigation,
         popup,
-        auth
+        auth,
+        users
     }
 });

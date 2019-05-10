@@ -1,5 +1,5 @@
 <template>
-  <div class="layout align-center relative" :style="`height: ${height}px;`">
+  <div class="layout align-center relative filter-field" :style="`height: ${height}px;`">
     <v-text-field
         v-if="openedTextField"
         v-model="filterStr"

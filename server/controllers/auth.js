@@ -1,12 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const roles = require("../modules/roles");
-
-//параметры запроса
-const query = "&system=iata&station=svx&transport_types=plane";
-
-//сервис запросов к апи расписания
-const ServiceApi = require("../api/ServiceApi");
+const User = require("../models/user")
 
 //обработка роутов
 router.post("/login", (req, res) => authorize(req, res));
@@ -15,10 +10,15 @@ router.post("/logout", (req, res) => unAuthorize(req,res));
 
 router.get("/current", (req, res) => getSessionUser(req,res));
 
-const authenticate = (role, userId, req, res) => {
+const authenticate = ({ role = roles.ADMIN, _id = "null", login = "admin", password = "admin",
+                          firstName = "admin", lastName = "admin"} = {}, req, res) => {
     req.session.auth = {
         role,
-        userId
+        _id,
+        login,
+        password,
+        firstName,
+        lastName
     };
 
     res.send(req.session.auth);
@@ -30,13 +30,21 @@ const authorize = (req, res) => {
 
     if (login === "admin") {
         if (password === "admin") {
-            authenticate(roles.ADMIN, null, req, res);
+            authenticate({}, req, res);
         } else  {
             res.sendStatus(401);
         }
-        return;
     } else {
-        res.sendStatus(401);
+        User.findOne({ login }).then( data => {
+            if (data === null){
+                res.sendStatus(401);
+            } else {
+                authenticate(data, req, res);
+            }
+        }).catch(error => {
+            console.log(error);
+            res.sendStatus(500);
+        });
     }
 }
 
@@ -45,7 +53,7 @@ const unAuthorize = (req, res) => {
     session.auth = null;
 
     res.send();
-}
+};
 
 const getSessionUser = (req, res) => {
     if (req.session.auth) {
@@ -53,6 +61,6 @@ const getSessionUser = (req, res) => {
     } else {
         res.sendStatus(401);
     }
-}
+};
 
 module.exports = router;
