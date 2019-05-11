@@ -1,13 +1,17 @@
 import Vue from "vue";
 import Router from "vue-router";
 
-import TeacherListView from "./views/TeacherListView";
+import MainTeacherView from "./views/MainTeacherView";
 import TeacherView from "./views/TeacherView";
 import NotFoundView from "./views/NotFoundView";
 import LoginView from "./views/LoginView";
 
 import { roles } from "./modules/constant";
 import store from "./store/index";
+
+import TeacherList from "./components/teacher/TeacherList";
+import JournalList from "./components/journal/JournalList"
+import TeacherJournalList from "./components/teacher/TeacherJournalList"
 
 const accesses = {
   teacher: [roles.TEACHER],
@@ -30,20 +34,41 @@ const routes = [
     component: LoginView,
     meta: { requiresAuth: false, access: accesses.all }
   }, {
-    name: "teachers",
-    path: "/teachers",
-    component: TeacherListView,
-    meta: { requiresAuth: true, access: accesses.admin }
+    path: "/main",
+    component: MainTeacherView,
+    meta: { requiresAuth: true, access: accesses.admin, replace: { [roles.TEACHER]: { name: "teacher"}} },
+    children: [
+      {
+        name: "teachers",
+        path: "",
+        component: TeacherList,
+        meta: { requiresAuth: true, access: accesses.admin }
+      }, {
+        name: "journals",
+        path: "journals",
+        component: JournalList,
+        meta: { requiresAuth: true, access: accesses.admin }
+      }
+
+    ]
   }, {
-    name: "departure",
-    path: "/departure/:id",
+    name: "",
+    path: "/teacher",
     component: TeacherView,
-    meta: { requiresAuth: true, access: accesses.all }
-  }, {
-    name: "arrival",
-    path: "/arrival/:id",
-    component: TeacherView,
-    meta: { requiresAuth: true, access: accesses.all }
+    meta: { requiresAuth: false, access: accesses.all },
+    children: [
+      {
+        name: "teacher",
+        path: "",
+        component: TeacherJournalList,
+        meta: { requiresAuth: true, access: accesses.admin }
+      }, {
+        name: "idTeacher",
+        path: ":id",
+        component: TeacherJournalList,
+        meta: { requiresAuth: true, access: accesses.admin }
+      }
+    ]
   }, {
     name: "404",
     path: "/*",
@@ -82,10 +107,12 @@ router.beforeEach((to, from, next) => {
     if (!user) {
       store.dispatch("getSessionUser")
           .then(() => {
-            role = user.role;
+            role = store.getters.authUser.role;
             forAuth(to, next, role);
           })
-          .catch(() => next({ name: "login" }))
+          .catch(() => {
+            next({ name: "login" })
+          })
     } else {
       forAuth(to, next, role);
     }

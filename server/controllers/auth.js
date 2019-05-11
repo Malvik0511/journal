@@ -35,7 +35,7 @@ const authorize = (req, res) => {
             res.sendStatus(401);
         }
     } else {
-        User.findOne({ login }).then( data => {
+        User.findOne({ login, password }).then( data => {
             if (data === null){
                 res.sendStatus(401);
             } else {

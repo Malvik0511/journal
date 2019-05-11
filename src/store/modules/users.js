@@ -13,7 +13,7 @@ const mutations = {
     },
 
     CLEAR_USER_LIST (state) {
-        state.auth.user = [];
+        state.userList = [];
     }
 };
 
@@ -22,6 +22,10 @@ const getters = {
     userList: state => {
         return state.userList;
     },
+
+    userById: state => id => {
+        return state.userList.find(user => user._id === id)
+    }
 };
 
 const actions = {
@@ -38,14 +42,14 @@ const actions = {
             .then(users => dispatch("getUserList", users));
     },
 
-    editUser({ dispatch }, params) {
-        const url = 'users/edit';
+    delUser({ dispatch }, params) {
+        const url = 'users/del';
         return RequestApi.request({ body: params, additional: { url }})
             .then(users => dispatch("getUserList", users));
     },
 
-    delUser({ dispatch }, params) {
-        const url = 'users/del';
+    editUser({ dispatch }, params) {
+        const url = 'users/edit';
         return RequestApi.request({ body: params, additional: { url }})
             .then(users => dispatch("getUserList", users));
     }

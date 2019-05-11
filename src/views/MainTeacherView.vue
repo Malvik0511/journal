@@ -5,13 +5,14 @@
                 <filter-field @setFilterStr="setFilterStr"
                               :height="36"
                               class="align-self-center justify-end"
-                              placeholder="Название журнала"></filter-field>
+                              :placeholder="placeholder"></filter-field>
             </v-layout>
         </template>
         <template slot="content">
             <v-layout wrap align-content-start>
-                <v-flex xs12>
-                    <router-view :user_id="userId"></router-view>
+                <navigation-main-teacher></navigation-main-teacher>
+                <v-flex xs12 v-if="loaded">
+                    <router-view></router-view>
                 </v-flex>
             </v-layout>
         </template>
@@ -22,23 +23,25 @@
 <script>
     import Layout from "../components/layout/Layout";
     import FilterField from "../components/filter/filterField/FilterField";
+    import NavigationMainTeacher from "../components/navigation/navigationMainTeacher/NavigationMainTeacher"
 
     export default {
 
-        name: "TeacherView",
-
-        components:{
-            Layout,
-            FilterField
-        },
+        name: "MainTeacherView",
 
         data:() => ({
             loaded: false
         }),
 
+        components:{
+            Layout,
+            FilterField,
+            NavigationMainTeacher
+        },
+
         computed: {
-            userId() {
-                return this.$route.params.id
+            placeholder(){
+                return this.$route.name === "teachers" ? "Фамилия преподавателя" : "Название журнала";
             }
         },
 
@@ -57,6 +60,7 @@
         created() {
             this.init();
         }
+
     }
 
 </script>

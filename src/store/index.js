@@ -8,6 +8,7 @@ import navigation from "./modules/navigation";
 import popup from "./modules/popup";
 import auth from "./modules/auth";
 import users from "./modules/users";
+import journals from "./modules/journals";
 
 
 Vue.use(Vuex);
@@ -29,6 +30,7 @@ export default new Vuex.Store({
         navigation,
         popup,
         auth,
-        users
+        users,
+        journals
     }
 });

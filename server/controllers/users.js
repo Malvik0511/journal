@@ -55,14 +55,10 @@ const editUser = (req, res) => {
         });
 };
 
-const delUser = (req, res) => {
-    console.log(req.body.id)
+const delUser = (req, res) =>
     User.findByIdAndDelete(req.body.id)
         .then(() => res.send())
         .catch(err => res.sendStatus(500));
-}
-
-
 
 
 module.exports = router;

@@ -6,13 +6,12 @@ const schema = new mongoose.Schema({
         required: true
     },
     year: {
-        type: Number,
+        type: Date,
         required: true
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         index: true,
-        ref: "User",
         required: true,
     },
     lessons: [{
