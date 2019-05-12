@@ -20,19 +20,21 @@
             >
                 <template slot="items"
                           slot-scope="props">
-                    <tr @click="toJournal(props.item.id)"
+                    <tr @click="(e) => toJournal(e, props.item._id)"
                         class="pointer">
                         <td class="">{{ props.item.name }}</td>
                         <td class="">{{ props.item.year.slice(0,10) }}</td>
                         <td class="">{{ props.item.ownerName }}</td>
                         <td>
                             <tool-tip-btn :round="true"
+                                          data-prevent
                                           @click="startEditJournal(props.item)"
                                           active_icon = "edit"
                                           active_text = "Редактировать"
                                           :active = "form.open"
                                           class="ma-0 mr-1"></tool-tip-btn>
                             <tool-tip-btn :round="true"
+                                          data-prevent
                                           @click="removeJournal(props.item._id)"
                                           active_icon = "clear"
                                           active_text = "Удалить"
@@ -262,8 +264,10 @@
              * к рейсу
              * @param id
              */
-            toJournal(){
-
+            toJournal(e, id){
+                if (!e.target.closest('[data-prevent]')) {
+                    this.$router.push({name: "journal", params: {id}});
+                }
             },
 
             clearForm() {

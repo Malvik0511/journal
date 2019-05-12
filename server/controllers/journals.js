@@ -7,6 +7,8 @@ router.get("", (req, res) => getJournals(req, res));
 
 router.get("/by_teacher_id", (req, res) => getTeacherJournals(req, res));
 
+router.get("/by_id", (req, res) => getJournal(req, res));
+
 router.post("/add", (req, res) => addJournal(req, res));
 
 router.post("/del", (req, res) => delJournal(req, res));
@@ -31,7 +33,6 @@ const getJournals = (req, res) =>
 
 const getTeacherJournals = (req, res) => {
     const { id } = req.query;
-    console.log(id);
 
     Log.find({ owner: { _id: id } },
         undefined,
@@ -46,6 +47,14 @@ const getTeacherJournals = (req, res) => {
             res.sendStatus(500);
         });
 };
+
+const getJournal = (req, res) =>
+    Log.findById(req.query)
+        .then(journal => res.json(journal))
+        .catch(error => {
+            console.error(error);
+            res.sendStatus(500);
+        });
 
 const addJournal = (req, res) => {
     const journal = req.body;

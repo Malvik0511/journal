@@ -14,11 +14,27 @@
                     no-data-text="">
                 <template slot="items"
                           slot-scope="props">
-                    <tr @click="toJournal(props.item.id)"
+                    <tr @click="(e) => toJournal(e, props.item._id)"
                         class="pointer">
                         <td class="">{{ props.item.name }}</td>
                         <td class="">{{ props.item.year.slice(0,10) }}</td>
                         <td class="">{{ props.item.ownerName }}</td>
+                        <td>
+                            <tool-tip-btn :round="true"
+                                          data-prevent
+                                          @click="startEditJournal(props.item)"
+                                          active_icon = "edit"
+                                          active_text = "Редактировать"
+                                          :active = "form.open"
+                                          class="ma-0 mr-1"></tool-tip-btn>
+                            <tool-tip-btn :round="true"
+                                          data-prevent
+                                          @click="removeJournal(props.item._id)"
+                                          active_icon = "clear"
+                                          active_text = "Удалить"
+                                          :active = "false"
+                                          class="ma-0 mr-1"></tool-tip-btn>
+                        </td>
                     </tr>
                 </template>
             </v-data-table>
@@ -35,12 +51,43 @@
                               :text="notFound.text"
                               :advice = "notFound.advice"
                               :back_page_btn="false"></navigation-not-found>
+        <v-dialog v-if="form.open" persistent v-model="form.open" max-width="500px">
+            <v-card>
+                <v-form v-model="form.valid" ref="form">
+                    <v-card-title>
+                        <span class="headline">Данные журнала</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-container grid-list-md>
+                            <v-layout wrap>
+                                <v-flex xs12>
+                                    <v-select v-model="form.data.owner"
+                                              :items="userList"
+                                              item-text="lastName"
+                                              item-value="_id"
+                                              label="Select"
+                                              return-object
+                                              single-line></v-select>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                        <small>*indicates required field</small>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="white primary--text" @click="cancel">Отмена</v-btn>
+                        <v-btn color="primary" :disabled="!form.valid" @click="apply">Добавить</v-btn>
+                    </v-card-actions>
+                </v-form>
+            </v-card>
+        </v-dialog>
     </v-layout>
 </template>
 
 <script>
     import InfiniteLoading from "vue-infinite-loading";
     import NavigationNotFound from "../navigation/navigationNotFound/NavigationNotFound";
+    import ToolTipBtn from "../common/toolTipBtn/ToolTipBtn";
     import { roles } from "../../modules/constant";
 
     export default {
@@ -49,6 +96,7 @@
         components:{
             InfiniteLoading,
             NavigationNotFound,
+            ToolTipBtn
         },
 
         mounted(){
@@ -80,11 +128,7 @@
                 open: false,
                 valid: false,
                 data: {
-                    firstName: "",
-                    lastName: "",
-                    login:"",
-                    password: "",
-                    _id: ""
+                    owner: "",
                 },
                 mainTeacher: false
             },
@@ -134,6 +178,12 @@
                     })
             },
 
+            userList() {
+                return this.form.data.owner ?
+                    this.$store.getters.userList.filter(item => item._id !== this.form.data.owner) :
+                    this.$store.getters.userList;
+            },
+
             filterWord(){
                 return this.$store.getters.filterWord;
             },
@@ -145,6 +195,7 @@
                         { text: "Название", align: "left", value: "name", sortable: true },
                         { text: "Дата создания", align: "left", value: "year", sortable: true },
                         { text: "Держатель", align: "left", value: "owner", sortable: false },
+                        { text: "", align: "left", value: "", sortable: false },
                     ]
                 )
             }
@@ -174,9 +225,47 @@
              * к рейсу
              * @param id
              */
-            toJournal(){
-
+            toJournal(e, id){
+                if (!e.target.closest('[data-prevent]')) {
+                    this.$router.push({name: "journal", params: {id}})
+                }
             },
+
+            removeJournal(id) {
+                this.$store.dispatch("delJournal", { id });
+            },
+
+            clearForm() {
+                this.$refs.form.reset();
+            },
+
+            closeForm() {
+                this.form.open = false;
+            },
+
+            openForm() {
+                this.form.open = true;
+            },
+
+            cancel(){
+                this.clearForm();
+                this.closeForm();
+            },
+
+            apply() {
+                const journal = { ...this.$store.getters.journalById(this.form._id) };
+
+                journal.owner = this.form.data.owner._id;
+                this.$store.dispatch("editJournal", journal)
+                    .then(this.cancel);
+            },
+
+            startEditJournal({ owner, _id }) {
+                this.openForm();
+                let data = this.form.data;
+                data.owner = owner;
+                this.form._id = _id;
+            }
         }
     };
 </script>

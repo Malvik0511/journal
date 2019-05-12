@@ -15,7 +15,7 @@ const schema = new mongoose.Schema({
         required: true,
     },
     lessons: [{
-        type: {
+        name: {
             type: String,
             required: true
         },
@@ -26,7 +26,8 @@ const schema = new mongoose.Schema({
         }
     }],
     students: [{
-        name: String,
+        firstName: String,
+        lastName: String,
         parents: String,
         misses: [mongoose.Schema.Types.ObjectId]
     }]

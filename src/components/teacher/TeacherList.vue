@@ -20,7 +20,7 @@
             >
                 <template slot="items"
                           slot-scope="props">
-                    <tr @click="toTeacher(props.item._id)"
+                    <tr @click="(e) => toTeacher(e, props.item._id)"
                         class="pointer">
                         <td class="">{{ props.item.firstName }}</td>
                         <td class="">{{ props.item.lastName }}</td>
@@ -30,12 +30,14 @@
                         <td>
                             <tool-tip-btn :round="true"
                                           @click="startEditUser(props.item)"
+                                          data-prevent
                                           active_icon = "edit"
                                           active_text = "Редактировать"
                                           :active = "form.open"
                                           class="ma-0 mr-1"></tool-tip-btn>
                             <tool-tip-btn :round="true"
                                           @click="removeUser(props.item._id)"
+                                          data-prevent
                                           active_icon = "clear"
                                           active_text = "Удалить"
                                           :active = "false"
@@ -237,8 +239,10 @@
                 }
             },
 
-            toTeacher(id) {
-                this.$router.push({ name: "idTeacher", params: { id } });
+            toTeacher(e, id) {
+                if (!e.target.closest('[data-prevent]')){
+                    this.$router.push({ name: "idTeacher", params: { id } });
+                }
             },
 
             clearForm() {

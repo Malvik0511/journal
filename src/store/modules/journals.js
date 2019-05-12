@@ -25,6 +25,20 @@ const getters = {
 
     journalListByOwner: state => id => {
         return state.journalList.filter(item => item.owner === id);
+    },
+
+    journalById: state => id => {
+        return state.journalList.find(item => item._id === id);
+    },
+
+    studentById: state => id => {
+        const journal = state.journalList.find(item => item.students.find(student => student._id === id));
+        return journal.students.find(item => item._id === id);
+    },
+
+    lessonById: state => id => {
+        const journal = state.journalList.find(item => item.lessons.find(lesson => lesson._id === id));
+        return journal.lessons.find(item => item._id === id);
     }
 };
 
@@ -60,7 +74,6 @@ const actions = {
         return RequestApi.request({ body: params, additional: { url }})
             .then(journals => dispatch("getJournalList", journals));
     },
-
 
     updateJournalList({getters, commit}, list) {
         if (!getters.journalList.length) {

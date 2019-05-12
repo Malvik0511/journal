@@ -5,13 +5,19 @@ import MainTeacherView from "./views/MainTeacherView";
 import TeacherView from "./views/TeacherView";
 import NotFoundView from "./views/NotFoundView";
 import LoginView from "./views/LoginView";
+import JournalView from "./views/JournalView";
+import LessonView from "./views/LessonView";
+import StudentView from "./views/StudentView"
 
 import { roles } from "./modules/constant";
 import store from "./store/index";
 
 import TeacherList from "./components/teacher/TeacherList";
-import JournalList from "./components/journal/JournalList"
-import TeacherJournalList from "./components/teacher/TeacherJournalList"
+import JournalList from "./components/journal/JournalList";
+import TeacherJournalList from "./components/teacher/TeacherJournalList";
+import Journal from "./components/journal/Journal";
+import StudentCard from "./components/student/StudentCard";
+import LessonCard from "./components/lesson/LessonCard";
 
 const accesses = {
   teacher: [roles.TEACHER],
@@ -67,6 +73,45 @@ const routes = [
         path: ":id",
         component: TeacherJournalList,
         meta: { requiresAuth: true, access: accesses.admin }
+      }
+    ]
+  }, {
+    name: "",
+    path: "/journal",
+    component: JournalView,
+    meta: { requiresAuth: false, access: accesses.all },
+    children: [
+       {
+        name: "journal",
+        path: ":id",
+        component: Journal,
+        meta: { requiresAuth: true, access: accesses.all }
+      }
+    ]
+  }, {
+    name: "",
+    path: "/student",
+    component: StudentView,
+    meta: { requiresAuth: false, access: accesses.all },
+    children: [
+      {
+        name: "student",
+        path: ":id",
+        component: StudentCard,
+        meta: { requiresAuth: true, access: accesses.all }
+      }
+    ]
+  }, {
+    name: "",
+    path: "/lesson",
+    component: LessonView,
+    meta: { requiresAuth: false, access: accesses.all },
+    children: [
+      {
+        name: "lesson",
+        path: ":id",
+        component: LessonCard,
+        meta: { requiresAuth: true, access: accesses.all }
       }
     ]
   }, {
