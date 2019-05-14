@@ -42,13 +42,13 @@ const routes = [
   }, {
     path: "/main",
     component: MainTeacherView,
-    meta: { requiresAuth: true, access: accesses.admin, replace: { [roles.TEACHER]: { name: "teacher"}} },
+    meta: { requiresAuth: true, access: accesses.all},
     children: [
       {
         name: "teachers",
         path: "",
         component: TeacherList,
-        meta: { requiresAuth: true, access: accesses.admin }
+        meta: { requiresAuth: true, access: accesses.admin, replace: { [roles.TEACHER]: { name: "teacher"}}  }
       }, {
         name: "journals",
         path: "journals",
@@ -67,7 +67,7 @@ const routes = [
         name: "teacher",
         path: "",
         component: TeacherJournalList,
-        meta: { requiresAuth: true, access: accesses.admin }
+        meta: { requiresAuth: true, access: accesses.teacher }
       }, {
         name: "idTeacher",
         path: ":id",

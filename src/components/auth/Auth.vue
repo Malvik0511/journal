@@ -28,8 +28,9 @@
                 <v-layout justify-center>
                     <v-flex xs12>
                         <v-btn :disabled="!authForm.valid"
+                               dark
                                @click="auth"
-                               class = "auth__auth-btn v-btn_background-gradient1"
+                               class = "auth__auth-btn primary text--white"
                                id = "auth-btn"
                                block>Войти</v-btn>
                     </v-flex>
@@ -40,6 +41,8 @@
 </template>
 
 <script>
+    import "./auth.css";
+
     export default {
         name: "Auth",
 

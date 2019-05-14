@@ -1,6 +1,8 @@
 <template>
     <v-layout wrap align-content-start>
-        <tool-tip-btn @click="form.open = !form.open"
+        <v-flex xs12 class = "py-2 text-xs-center"><h2>{{teacherFullName ? teacherFullName : ""}} Журналы учителя</h2></v-flex>
+        <tool-tip-btn v-if="!admin"
+                      @click="form.open = !form.open"
                       active_icon = "add"
                       active_text = "Добавить"
                       :active = "form.open"
@@ -25,7 +27,7 @@
                         <td class="">{{ props.item.name }}</td>
                         <td class="">{{ props.item.year.slice(0,10) }}</td>
                         <td class="">{{ props.item.ownerName }}</td>
-                        <td>
+                        <td v-if="!admin">
                             <tool-tip-btn :round="true"
                                           data-prevent
                                           @click="startEditJournal(props.item)"
@@ -201,6 +203,16 @@
                     .filter(item => item.name.indexOf(this.filterWord) !== -1);
             },
 
+            admin() {
+               return this.$store.getters.authUserIsAdmin
+            },
+
+            teacherFullName() {
+               return this.admin && this.$store.getters.userById(this.user_id) &&
+                   this.$store.getters.userById(this.user_id).lastName + " " +
+                   this.$store.getters.userById(this.user_id).firstName + "."
+            },
+
             /**
              * список рейсов с учетом пагинации
              */
@@ -234,8 +246,8 @@
                         { text: "Название", align: "left", value: "name", sortable: true },
                         { text: "Дата создания", align: "left", value: "year", sortable: true },
                         { text: "Держатель", align: "left", value: "owner", sortable: false },
-                        { text: "", align: "left", value: "", sortable: false }
-                    ]
+                        !this.admin && { text: "", align: "left", value: "", sortable: false }
+                    ].filter(item => item)
                 )
             }
         },
@@ -285,6 +297,7 @@
             cancel(){
                 this.clearForm();
                 this.closeForm();
+                this.form._id = "";
             },
 
             apply() {

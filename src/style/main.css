@@ -25,3 +25,13 @@
 .fixed{
     position: fixed
 }
+
+.toolteep-btn .v-btn:not(.v-btn--icon) {
+    color: white;
+    background-color: #1976d2 !important;
+}
+
+.toolteep-btn.outline .v-btn:not(.v-btn--icon) {
+    color: #1976d2;
+    background-color: white !important;
+}

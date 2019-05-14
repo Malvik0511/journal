@@ -1,5 +1,6 @@
 <template>
     <v-layout wrap align-content-start>
+        <v-flex xs12 class = "py-2 text-xs-center"><h2>Список учителей</h2></v-flex>
         <tool-tip-btn @click="form.open = !form.open"
                       active_icon = "add"
                       active_text = "Добавить"
@@ -260,6 +261,7 @@
             cancel(){
                 this.clearForm();
                 this.closeForm();
+                this.form.data._id = "";
             },
 
             apply() {
@@ -273,8 +275,9 @@
             },
 
             addUser() {
-                const role = this.form.mainTeacher ? roles.ADMIN : roles.TEACHER
-                this.$store.dispatch("addUser", { ...this.form.data, role })
+                const role = this.form.mainTeacher ? roles.ADMIN : roles.TEACHER;
+                const { firstName, lastName, login, password } = this.form.data
+                this.$store.dispatch("addUser", { firstName, lastName, login, password, role })
                     .then(this.cancel);
             },
 

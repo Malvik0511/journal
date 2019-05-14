@@ -2,7 +2,9 @@
     <layout :toolbar="false">
         <template slot="content">
             <v-layout justify-center align-center>
-                <auth></auth>
+                <v-flex xs12 sm6 md5 lg3>
+                    <auth></auth>
+                </v-flex>
             </v-layout>
         </template>
     </layout>

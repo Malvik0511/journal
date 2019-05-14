@@ -1,4 +1,5 @@
 import RequestApi from "../../modules/requestApi";
+import { roles } from "../../modules/constant"
 /**
  * Фильтры рейсов
  */
@@ -24,6 +25,14 @@ const getters = {
     authUser: state => {
         return state.auth.user;
     },
+
+    authUserIsAdmin: state => {
+        return state.auth.user && state.auth.user.role === roles.ADMIN;
+    },
+
+    authUserFullName: state => {
+        return state.auth.user && state.auth.user.lastName +" " + state.auth.user.firstName;
+    }
 };
 
 const actions = {

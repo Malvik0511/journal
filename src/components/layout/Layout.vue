@@ -17,7 +17,7 @@
                                   active_icon = "exit_to_app"
                                   active_text = "Выход"
                                   :active="false"
-                                  class="ma-0 mr-1"></tool-tip-btn>
+                                  class="ma-0 mr-1 outline"></tool-tip-btn>
                 </v-layout>
         </v-toolbar>
         <!--Основной контент-->

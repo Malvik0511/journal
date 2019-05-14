@@ -1,18 +1,21 @@
 <template>
     <v-layout wrap align-content-start>
+        <v-flex xs12 class = "py-2 text-xs-center"><h2>Журнал {{journal.name}}</h2></v-flex>
         <v-layout align-center justify-space-beetween>
-            <tool-tip-btn @click="form2.open = !form2.open"
-                          active_icon = "add"
-                          active_text = "Урок"
-                          data-prevent
-                          :active = "form2.open"
-                          class="ma-0 mr-1"></tool-tip-btn>
-            <tool-tip-btn @click="form1.open = !form1.open"
-                          data-prevent
-                          active_icon = "add"
-                          active_text = "Ученика"
-                          :active = "form1.open"
-                          class="ma-0 mr-4"></tool-tip-btn>
+            <template v-if="!admin">
+                <tool-tip-btn @click="form2.open = !form2.open"
+                              active_icon = "add"
+                              active_text = "Урок"
+                              data-prevent
+                              :active = "form2.open"
+                              class="ma-0 mr-1"></tool-tip-btn>
+                <tool-tip-btn @click="form1.open = !form1.open"
+                              data-prevent
+                              active_icon = "add"
+                              active_text = "Ученика"
+                              :active = "form1.open"
+                              class="ma-0 mr-4"></tool-tip-btn>
+            </template>
             <interval-picker @update="updateInterval"></interval-picker>
         </v-layout>
         <v-flex v-if = "resultList.length || !loaded"
@@ -29,7 +32,7 @@
                     no-data-text="">
                 <template v-slot:headers="props">
                     <tr>
-                        <th>
+                        <th v-if="!admin">
                         </th>
                         <th class="text-xs-left">
                             Ученик
@@ -38,29 +41,31 @@
                             v-for="header in props.headers"
                             :key="header.id">
                             <span @click="toLesson(header.id)">{{ header.text }}</span>
-                            <tool-tip-btn :round="true"
-                                          @click="startEditLesson(header.id)"
-                                          data-prevent
-                                          sm
-                                          active_icon = "edit"
-                                          active_text = "Редактировать"
-                                          :active = "form1.open"
-                                          class="ma-0 mr-1"></tool-tip-btn>
-                            <tool-tip-btn :round="true"
-                                          @click="removeLesson(header.id)"
-                                          data-prevent
-                                          sm
-                                          active_icon = "clear"
-                                          active_text = "Удалить"
-                                          :active = "false"
-                                          class="ma-0 mr-1"></tool-tip-btn>
+                            <template v-if="!admin">
+                                <tool-tip-btn :round="true"
+                                              @click="startEditLesson(header.id)"
+                                              data-prevent
+                                              sm
+                                              active_icon = "edit"
+                                              active_text = "Редактировать"
+                                              :active = "form1.open"
+                                              class="ma-0 mr-1"></tool-tip-btn>
+                                <tool-tip-btn :round="true"
+                                              @click="removeLesson(header.id)"
+                                              data-prevent
+                                              sm
+                                              active_icon = "clear"
+                                              active_text = "Удалить"
+                                              :active = "false"
+                                              class="ma-0 mr-1"></tool-tip-btn>
+                            </template>
                         </th>
                     </tr>
                 </template>
                 <template slot="items"
                           slot-scope="props">
                     <tr class="pointer">
-                        <td>
+                        <td v-if="!admin">
                             <tool-tip-btn :round="true"
                                           @click="startEditStudent(props.item._id)"
                                           data-prevent
@@ -105,7 +110,7 @@
             <v-card>
                 <v-form v-model="form1.valid" ref="form1">
                     <v-card-title>
-                        <span class="headline">Данные учителя</span>
+                        <span class="headline">Данные ученика</span>
                     </v-card-title>
                     <v-card-text>
                         <v-container grid-list-md>
@@ -145,7 +150,7 @@
             <v-card>
                 <v-form v-model="form2.valid" ref="form2">
                     <v-card-title>
-                        <span class="headline">Данные учителя</span>
+                        <span class="headline">Информация об уроке</span>
                     </v-card-title>
                     <v-card-text>
                         <v-container grid-list-md>
@@ -296,6 +301,10 @@
             journal() {
                 return this.$store.getters.journalById(this.journal_id) || {};
             },
+
+            admin() {
+                return this.$store.getters.authUserIsAdmin;
+            },
             /**
              * список рейсов
              * @returns {default.computed.flightList|(function())|getters.flightList|Array}
@@ -393,6 +402,7 @@
             cancel(n){
                 this.clearForm(n);
                 this.closeForm(n);
+                this[`form${n}`]._id = "";
             },
 
             apply(n) {
@@ -477,22 +487,24 @@
             },
 
             toggleVisit({ studentId, lessonId }) {
-                const journal = { ...this.journal },
-                    students = journal.students,
-                    stId = students.findIndex(st => st._id === studentId);
+                if (!this.admin){
+                    const journal = { ...this.journal },
+                        students = journal.students,
+                        stId = students.findIndex(st => st._id === studentId);
 
 
-                if (stId !== -1) {
-                    const student = students[stId];
-                    const index = student.misses.findIndex(item => item === lessonId);
-                    if (index === -1) {
-                        student.misses.push(lessonId)
-                    } else {
-                        student.misses.splice(index, 1);
+                    if (stId !== -1) {
+                        const student = students[stId];
+                        const index = student.misses.findIndex(item => item === lessonId);
+                        if (index === -1) {
+                            student.misses.push(lessonId);
+                        } else {
+                            student.misses.splice(index, 1);
+                        }
+
+                        journal.students.splice(stId, 1, student);
+                        this.$store.dispatch("editJournal", journal);
                     }
-
-                    journal.students.splice(stId, 1, student);
-                    this.$store.dispatch("editJournal", journal);
                 }
             },
 

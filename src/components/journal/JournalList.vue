@@ -1,5 +1,6 @@
 <template>
     <v-layout wrap align-content-start>
+        <v-flex xs12 class = "py-2 text-xs-center"><h2>Список журналов</h2></v-flex>
         <v-flex v-if = "resultList.length || !loaded"
                 xs12 >
             <v-layout>
@@ -65,7 +66,7 @@
                                               :items="userList"
                                               item-text="lastName"
                                               item-value="_id"
-                                              label="Select"
+                                              label="Выберите держателя"
                                               return-object
                                               single-line></v-select>
                                 </v-flex>
@@ -130,6 +131,7 @@
                 data: {
                     owner: "",
                 },
+                _id: "",
                 mainTeacher: false
             },
             rules: {
@@ -179,9 +181,10 @@
             },
 
             userList() {
-                return this.form.data.owner ?
+                return (this.form.data.owner ?
                     this.$store.getters.userList.filter(item => item._id !== this.form.data.owner) :
-                    this.$store.getters.userList;
+                    this.$store.getters.userList)
+                    .filter(item => item.role !== roles.ADMIN);
             },
 
             filterWord(){
@@ -250,6 +253,7 @@
             cancel(){
                 this.clearForm();
                 this.closeForm();
+                this.form._id ="";
             },
 
             apply() {
