@@ -22,7 +22,7 @@
 
 <script>
     import Layout from "../components/layout/Layout";
-    import FilterField from "../components/filter/filterField/FilterField";
+    import FilterField from "../components/filter/FilterField";
     import NavigationMainTeacher from "../components/navigation/navigationMainTeacher/NavigationMainTeacher"
 
     export default {

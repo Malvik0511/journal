@@ -2,6 +2,7 @@
  * Методы получения данных с backend
  */
 import axios from "axios";
+import store from "../store/index"
 
 let RequestApi = {};
 
@@ -21,6 +22,15 @@ RequestApi.request = params =>
             params: (params.additional.method === "GET") && (params.body || {})
         })
             .then(response => response.data)
-            .catch(error => Promise.reject(error.response));
+            .catch(error => {
+                if (params.additional.showErr){
+                    store.dispatch("popupInfoOpen", {
+                        text: error.response.data && error.response.data.error || "Произошла ошибка",
+                        color: "red"
+                    });
+                }
+
+                return Promise.reject(error.response)
+            });
 
 export default RequestApi;

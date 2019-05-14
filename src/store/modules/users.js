@@ -38,19 +38,19 @@ const actions = {
 
     addUser({ dispatch }, params) {
         const url = 'users/add';
-        return RequestApi.request({ body: params, additional: { url }})
+        return RequestApi.request({ body: params, additional: { url, showErr: true }})
             .then(users => dispatch("getUserList", users));
     },
 
     delUser({ dispatch }, params) {
         const url = 'users/del';
-        return RequestApi.request({ body: params, additional: { url }})
+        return RequestApi.request({ body: params, additional: { url, showErr: true }})
             .then(users => dispatch("getUserList", users));
     },
 
     editUser({ dispatch }, params) {
         const url = 'users/edit';
-        return RequestApi.request({ body: params, additional: { url }})
+        return RequestApi.request({ body: params, additional: { url,  showErr: true }})
             .then(users => dispatch("getUserList", users));
     }
 };

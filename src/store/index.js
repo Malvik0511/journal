@@ -2,7 +2,6 @@ import Vue from "vue";
 import Vuex from "vuex";
 import CreatePersistedState from "vuex-persistedstate";
 
-import flights from "./modules/flights";
 import filters from "./modules/filters";
 import navigation from "./modules/navigation";
 import popup from "./modules/popup";
@@ -12,6 +11,15 @@ import journals from "./modules/journals";
 
 
 Vue.use(Vuex);
+
+const common = {
+    actions:{
+        clearStore({ commit }){
+            commit("CLEAR_USER_LIST");
+            commit("CLEAR_JOURNAL_LIST");
+        }
+    }
+};
 
 export default new Vuex.Store({
     plugins: [
@@ -25,12 +33,12 @@ export default new Vuex.Store({
     ],
 
     modules: {
-        flights,
         filters,
         navigation,
         popup,
         auth,
         users,
-        journals
+        journals,
+        common
     }
 });

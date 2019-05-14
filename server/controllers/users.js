@@ -26,7 +26,7 @@ const getUsers = (req, res) => {
         ).then(users => res.json(users))
             .catch(error => {
                 console.error(error);
-                res.sendStatus(500);
+                res.status(500).send({ error: "Произошла ошибка сервера" });
             });
     } else {
         res.json([req.session.auth]);
@@ -37,45 +37,45 @@ const addUser = (req, res) => {
     if (req.session.auth.role === roles.ADMIN) {
         const user = req.body;
         User.findOne({login: user.login}).then(data => {
-            if (data === null) {
+            if (data === null && user.login !== "admin") {
                 new User(user).save()
                     .then(student => res.json(student))
                     .catch(error => {
                         console.error(error);
-                        res.sendStatus(500);
+                        res.status(500).send({ error: "Произошла ошибка сервера" });
                     });
             } else {
                 res.status(422).send({error: "Пользователь существует"});
             }
         }).catch(error => {
             console.log(error);
-            res.sendStatus(500);
+            res.status(500).send({ error: "Произошла ошибка сервера" });;
         });
-    } else res.sendStatus(403);
+    } else res.status(403).send({ error: "Нет прав для выполнения операции" });;
 };
 
 const editUser = (req, res) => {
     if (req.session.auth.role === roles.ADMIN || req.body._id === req.session.auth._id) {
         User.findOne({login: req.body.login}).then(user => {
-            if (!user || user._id == req.body._id) {
+            if (req.body.login !== "admin" && (!user || user._id == req.body._id)) {
                 User.findByIdAndUpdate(req.body._id, req.body)
                     .then(user => res.json(user))
                     .catch(error => {
                         console.log(error);
-                        res.sendStatus(500);
+                        res.status(500).send({ error: "Произошла ошибка сервера" });
                     });
             }
             else res.status(422).send({ error: "Пользователь существует" })
         })
-    } else res.sendStatus(403);
+    } else res.status(403).send({ error: "Нет прав для выполнения операции" });;
 };
 
 const delUser = (req, res) => {
     if (req.session.auth.role === roles.ADMIN) {
         User.findByIdAndDelete(req.body.id)
             .then(() => res.send())
-            .catch(err => res.sendStatus(500));
-    } else res.sendStatus(403);
+            .catch(err => res.status(500).send({ error: "Произошла ошибка сервера" }));
+    } else res.status(403).send({ error: "Нет прав для выполнения операции" });;
 };
 
 

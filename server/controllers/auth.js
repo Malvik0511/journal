@@ -32,21 +32,21 @@ const authorize = (req, res) => {
         if (password === "admin") {
             authenticate({}, req, res);
         } else  {
-            res.sendStatus(401);
+            res.status(401).send({ error: "Неверный логин или пароль" });
         }
     } else {
         User.findOne({ login, password }).then( data => {
             if (data === null){
-                res.sendStatus(401);
+                res.status(401).send({ error: "Неверный логин или пароль" });
             } else {
                 authenticate(data, req, res);
             }
         }).catch(error => {
             console.log(error);
-            res.sendStatus(500);
+            res.status(500).send({ error: "Произошла ошибка сервера" });
         });
     }
-}
+};
 
 const unAuthorize = (req, res) => {
     const { session } = req;

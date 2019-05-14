@@ -1,21 +1,21 @@
 <template>
     <v-layout wrap align-content-start>
         <v-flex xs12 class = "py-2 text-xs-center"><h2>Журнал {{journal.name}}</h2></v-flex>
-        <v-layout align-center justify-space-beetween>
-            <template v-if="!admin">
+        <v-layout align-center justify-space-beetween wrap>
+            <v-flex v-if="!admin">
                 <tool-tip-btn @click="form2.open = !form2.open"
-                              active_icon = "add"
-                              active_text = "Урок"
-                              data-prevent
-                              :active = "form2.open"
-                              class="ma-0 mr-1"></tool-tip-btn>
+                          active_icon = "add"
+                          active_text = "Урок"
+                          data-prevent
+                          :active = "form2.open"
+                          class="ma-0 mr-1"></tool-tip-btn>
                 <tool-tip-btn @click="form1.open = !form1.open"
                               data-prevent
                               active_icon = "add"
-                              active_text = "Ученика"
+                              active_text = "Ученик"
                               :active = "form1.open"
                               class="ma-0 mr-4"></tool-tip-btn>
-            </template>
+            </v-flex>
             <interval-picker @update="updateInterval"></interval-picker>
         </v-layout>
         <v-flex v-if = "resultList.length || !loaded"
@@ -83,7 +83,7 @@
                         </td>
                         <td class=""
                             @click="toStudent(props.item._id)"
-                            data-prevent>{{ props.item.firstName }} {{ props.item.lastName }}</td>
+                            data-prevent>{{ props.item.lastName }} {{ props.item.firstName }} </td>
                         <td class="" v-for="(lesson, i) in lessons"
                             :key="i"
                             data-prevent

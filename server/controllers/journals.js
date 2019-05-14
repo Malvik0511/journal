@@ -30,7 +30,7 @@ const getJournals = (req, res) =>
     ).then(logs => res.json(logs))
         .catch(error => {
             console.error(error);
-            res.sendStatus(500);
+            res.status(500).send({ error: "Произошла ошибка сервера" });
         });
 
 const getTeacherJournals = (req, res) => {
@@ -47,9 +47,9 @@ const getTeacherJournals = (req, res) => {
         ).then(journals => res.json(journals))
             .catch(error => {
                 console.error(error);
-                res.sendStatus(500);
+                res.status(500).send({ error: "Произошла ошибка сервера" });
             });
-    } else res.sendStatus(403);
+    } else res.status(403).send({ error: "Нет прав для выполнения операции" });
 };
 
 const getJournal = (req, res) =>
@@ -57,11 +57,11 @@ const getJournal = (req, res) =>
         .then(journal => {
             if (req.session.auth.role === roles.ADMIN || journal.owner === req.session.auth._id){
                 res.json(journal)
-            } else res.sendStatus(403);
+            } else res.status(403).send({ error: "Нет прав для выполнения операции" });
         })
         .catch(error => {
             console.error(error);
-            res.sendStatus(500);
+            res.status(500).send({ error: "Произошла ошибка сервера" });
         });
 
 const addJournal = (req, res) => {
@@ -72,16 +72,16 @@ const addJournal = (req, res) => {
             .then(journal => res.json(journal))
             .catch(error => {
                 console.error(error);
-                res.sendStatus(500);
+                res.status(500).send({ error: "Произошла ошибка сервера" });
             });
-    } else res.sendStatus(403);
+    } else res.status(403).send({ error: "Нет прав для выполнения операции" });
 
 };
 
 const delJournal = (req, res) =>
     Log.findByIdAndDelete(req.body.id)
         .then(() => res.send())
-        .catch(err => res.sendStatus(500));
+        .catch(() => res.status(500).send({ error: "Произошла ошибка сервера" }));
 
 const editJournal = (req, res) => {
     if (req.session.auth.role === roles.ADMIN || req.session.auth._id === req.body.owner) {
@@ -89,7 +89,7 @@ const editJournal = (req, res) => {
             .then(journal => res.json(journal))
             .catch(error => {
                 console.log(error);
-                res.sendStatus(500);
+                res.status(500).send({ error: "Произошла ошибка сервера" })
             });
     }
 };

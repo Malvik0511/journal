@@ -59,19 +59,19 @@ const actions = {
 
     addJournal({ dispatch }, params) {
         const url = 'journals/add';
-        return RequestApi.request({ body: params, additional: { url }})
+        return RequestApi.request({ body: params, additional: { url, showErr: true }})
             .then(journals => dispatch("getJournalList", journals));
     },
 
     delJournal({ dispatch }, params) {
         const url = 'journals/del';
-        return RequestApi.request({ body: params, additional: { url }})
+        return RequestApi.request({ body: params, additional: { url, showErr: true }})
             .then(journals => dispatch("getJournalList", journals));
     },
 
     editJournal({ dispatch }, params) {
         const url = 'journals/edit';
-        return RequestApi.request({ body: params, additional: { url }})
+        return RequestApi.request({ body: params, additional: { url, showErr: true }})
             .then(journals => dispatch("getJournalList", journals));
     },
 
@@ -87,7 +87,7 @@ const actions = {
                 } else {
                     journal.push(item);
                 }
-            })
+            });
 
             commit("SET_JOURNAL_LIST", journal) ;
         }

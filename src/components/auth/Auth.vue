@@ -85,14 +85,14 @@
             init(){
                 this.$store.dispatch("getSessionUser")
                     .then(this.goHome)
-                    //.catch(this.clearStore);
+                    .catch(this.clearStore);
             },
 
             tryToLogin() {
                 if (this.sessionUser && this.isLoggedIn) {
                     this.goHome();
                 } else {
-                   // this.clearStore();
+                   this.clearStore();
                 }
             },
 
@@ -106,18 +106,10 @@
 
                 this.$store.dispatch("logIn", { login, password })
                     .then(this.goHome)
-                    .catch(this.showErr);
             },
 
             goHome(){
                 this.$router.push("/");
-            },
-
-            showErr(){
-                this.$store.dispatch("popupInfoOpen", {
-                    text: "Неверный логин или пароль",
-                    color: "red"
-                });
             }
         }
     };

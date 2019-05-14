@@ -1,9 +1,9 @@
 .filter-field .v-input{
     right: 40px;
-    width: 40vw;
+    width: 400px;
 }
 
-@media (max-width: 960px){
+@media (max-width: 600px){
     .filter-field .v-input{
         width:55vw;
     }

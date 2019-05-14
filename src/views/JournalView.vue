@@ -21,7 +21,7 @@
 
 <script>
     import Layout from "../components/layout/Layout";
-    import FilterField from "../components/filter/filterField/FilterField";
+    import FilterField from "../components/filter/FilterField";
 
     export default {
 

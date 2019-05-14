@@ -28,7 +28,7 @@
 <script>
 import "./filterField.css";
 
-import ToolTipBtn from "../../common/toolTipBtn/ToolTipBtn";
+import ToolTipBtn from "../common/toolTipBtn/ToolTipBtn";
 
 export default {
   name: "FilterField",

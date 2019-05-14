@@ -1,6 +1,5 @@
 const express = require('express'),
     app = express(),
-    flight = require("./controllers/flight"),
     auth = require("./controllers/auth"),
     users = require("./controllers/users"),
     journals = require("./controllers/journals"),
@@ -27,7 +26,6 @@ app.use(session({
     saveUninitialized: true
 }));
 
-app.use('/api/flight/', flight);
 app.use('/api/user/', auth);
 app.use('/api/users/', users);
 app.use('/api/journals/', journals);

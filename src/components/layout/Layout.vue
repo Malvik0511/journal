@@ -25,7 +25,6 @@
             <v-layout :fill-height="contentFillHeight" class="px-4 pb-4">
                 <slot name="content"></slot>
                 <v-layout class = "layout__block_fixed" column>
-                    <updater class="order-xs1"></updater>
                     <navigation-scroll-top class="order-xs2"></navigation-scroll-top>
                 </v-layout>
             </v-layout>
@@ -39,7 +38,6 @@
     import "./layout.css";
     import NavigationScrollTop from "../navigation/navigationScrollTop/NavigationScrollTop";
     import PopUp from "../common/popUp/popUp";
-    import Updater from "../common/updater/Updater";
     import ToolTipBtn from "../common/toolTipBtn/ToolTipBtn";
 
     export default {
@@ -48,7 +46,6 @@
         components:{
             NavigationScrollTop,
             PopUp,
-            Updater,
             ToolTipBtn
         },
 

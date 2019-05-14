@@ -38,7 +38,7 @@ const getters = {
 const actions = {
     logIn({ commit }, params) {
         const url = 'user/login';
-        return RequestApi.request({body: params, additional: {url}})
+        return RequestApi.request({body: params, additional: {url, showErr: true}})
             .then(user => commit("SET_USER_AUTH", user))
     },
 
