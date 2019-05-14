@@ -1,4 +1,4 @@
-# air
+# journal
 
 ## Project setup
 ```
