@@ -178,14 +178,14 @@
 
         computed: {
             /**
-             * список рейсов
+             * список учителей
              * @returns {default.computed.flightList|(function())|getters.flightList|Array}
              */
             list(){
                 return this.$store.getters.userList;
             },
             /**
-             * список рейсов с учетом фильтров
+             * список учителе с учетом фильтров
              * @returns {*}
              */
             filtredList(){
@@ -193,7 +193,7 @@
                     .filter(teacher => teacher.lastName.indexOf(this.filterWord) !== -1);
             },
             /**
-             * список рейсов с учетом пагинации
+             * список учителей с учетом пагинации
              */
             resultList(){
                 return this.filtredList
@@ -221,7 +221,7 @@
 
         methods: {
             /**
-             * запрос рейсов
+             * запрос списка учителей
              */
             init(){
                 this.loaded = false;
@@ -239,7 +239,11 @@
                     $state.complete();
                 }
             },
-
+            /**
+             * переход к списку журналов учителя
+             * @param e
+             * @param id
+             */
             toTeacher(e, id) {
                 if (!e.target.closest('[data-prevent]')){
                     this.$router.push({ name: "idTeacher", params: { id } });

@@ -22,6 +22,9 @@
         },
 
         computed: {
+            /**
+             *преобразование объекта урока в представление для карточки урока
+             */
             lesson() {
                 const lesson = this.$store.getters.lessonById(this.lesson_id);
                 const prepairLesson = {};

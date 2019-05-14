@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+//модель журнала
 
 const schema = new mongoose.Schema({
     name: {

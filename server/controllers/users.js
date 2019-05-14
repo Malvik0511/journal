@@ -12,7 +12,11 @@ router.post("/del", (req, res) => delUser(req, res));
 
 router.post("/edit", (req, res) => editUser(req, res));
 
-
+/**
+ * отдает пользователей только админу
+ * @param req
+ * @param res
+ */
 const getUsers = (req, res) => {
     if (req.session.auth.role === roles.ADMIN) {
         User.find(
@@ -32,7 +36,11 @@ const getUsers = (req, res) => {
         res.json([req.session.auth]);
     }
 };
-
+/**
+ * добавляет пользователей исключая логин admin и имеющиеся логины
+ * @param req
+ * @param res
+ */
 const addUser = (req, res) => {
     if (req.session.auth.role === roles.ADMIN) {
         const user = req.body;
@@ -53,7 +61,11 @@ const addUser = (req, res) => {
         });
     } else res.status(403).send({ error: "Нет прав для выполнения операции" });;
 };
-
+/**
+ * редактирует пользователя исключая логин админ и иеющиеся логины
+ * @param req
+ * @param res
+ */
 const editUser = (req, res) => {
     if (req.session.auth.role === roles.ADMIN || req.body._id === req.session.auth._id) {
         User.findOne({login: req.body.login}).then(user => {
@@ -69,7 +81,11 @@ const editUser = (req, res) => {
         })
     } else res.status(403).send({ error: "Нет прав для выполнения операции" });;
 };
-
+/**
+ * удаляет пользователя
+ * @param req
+ * @param res
+ */
 const delUser = (req, res) => {
     if (req.session.auth.role === roles.ADMIN) {
         User.findByIdAndDelete(req.body.id)

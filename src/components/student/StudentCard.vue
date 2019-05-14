@@ -22,6 +22,7 @@
         },
 
         computed: {
+            //преобразование объекта студента в представление для карточки студента
             student() {
                 const user = this.$store.getters.studentById(this.student_id);
                 const prepairUser = {

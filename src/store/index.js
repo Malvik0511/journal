@@ -13,6 +13,7 @@ import journals from "./modules/journals";
 Vue.use(Vuex);
 
 const common = {
+    //очистка хранилища
     actions:{
         clearStore({ commit }){
             commit("CLEAR_USER_LIST");

@@ -22,9 +22,10 @@
         data: () => ({}),
 
         props: {
-          nav_list: {
-              required: true
-          }
+            //список объектов для построения навигации
+            nav_list: {
+                 required: true
+            }
         },
 
         computed: {

@@ -4,35 +4,32 @@ import { roles } from "../../modules/constant"
  * Фильтры рейсов
  */
 const state = {
-    //текущие фильтры
+    //авторизованный пользователь
     auth:{
         user: null
     },
 };
 
 const mutations = {
+    // комит авторизации
     SET_USER_AUTH(state, val) {
         state.auth.user =  val;
     },
-
+    // комит логаута
     SET_USER_UNAUTH(state) {
         state.auth.user = null;
     }
 };
 
 const getters = {
-    // текущий фильтр задержки рейса
+    // текущий авторизованный пользователь
     authUser: state => {
         return state.auth.user;
     },
-
+    // проверка аторизованного пользователя на админа
     authUserIsAdmin: state => {
         return state.auth.user && state.auth.user.role === roles.ADMIN;
     },
-
-    authUserFullName: state => {
-        return state.auth.user && state.auth.user.lastName +" " + state.auth.user.firstName;
-    }
 };
 
 const actions = {
@@ -47,7 +44,7 @@ const actions = {
         return RequestApi.request({ additional: {url} })
             .then(user => commit("SET_USER_UNAUTH", user))
     },
-
+    //получает пользователя из сессии
     getSessionUser({ commit }) {
         const url = 'user/current';
         const method = 'GET';

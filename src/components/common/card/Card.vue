@@ -21,10 +21,12 @@
         name: "Card",
 
         props: {
+            //заголовок карты
             title: {
                 type: String,
                 default: "Заголовок"
             },
+            //объект представления
             item: {
                 type: Object,
                 required: true

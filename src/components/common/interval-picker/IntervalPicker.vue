@@ -62,9 +62,10 @@
         name: "IntervalPicker",
 
         data: () => ({
+            //время первого селектора
             start: new Date().toISOString().substr(0, 10),
+            //время второго селектора
             stop: new Date().toISOString().substr(0, 10),
-            today: new Date().toISOString().substr(0, 10),
             menu: false,
             menu2: false,
         }),
@@ -73,6 +74,9 @@
         },
 
         methods: {
+            /**
+             * обновление времени с передачей радителю
+             */
             updateStart(start = this.start) {
                 const val = parseInt(new Date(start).getTime()/1000);
                 this.menu = false;
@@ -86,7 +90,9 @@
                 this.stop = stop;
                 this.$emit("update", { field: 'stop', val });
             },
-
+            /**
+             * дефолтная установка времени
+             */
             init(){
                 this.start = this.$store.getters.usersStatisticStart ?
                     new Date(this.$store.getters.usersStatisticStart * 1000).toISOString().substr(0, 10):

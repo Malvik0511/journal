@@ -38,7 +38,7 @@
 
         computed: {
             userId() {
-                return this.$route.params.id || this.$store.getters.authUser._id;
+                return this.$route.params.id || this.$store.getters.authUser && this.$store.getters.authUser._id;
             }
         },
 

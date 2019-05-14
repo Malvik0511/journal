@@ -17,22 +17,36 @@ router.post("/del", (req, res) => delJournal(req, res));
 router.post("/edit", (req, res) => editJournal(req, res));
 
 
-
-const getJournals = (req, res) =>
-    Log.find(
-        {},
-        undefined,
-        {
-            sort: {
-                name: 1
+/**
+ * jотдает журналы исходя и з правила админам все учителю только его
+ * @param req
+ * @param res
+ */
+const getJournals = (req, res) => {
+    let obj = {};
+    if (req.session.auth.role !== roles.ADMIN) {
+        obj = { owner: req.session.auth._id }
+    }
+        Log.find(
+            obj,
+            undefined,
+            {
+                sort: {
+                    name: 1
+                }
             }
-        }
-    ).then(logs => res.json(logs))
-        .catch(error => {
-            console.error(error);
-            res.status(500).send({ error: "Произошла ошибка сервера" });
-        });
+        ).then(logs => res.json(logs))
+            .catch(error => {
+                console.error(error);
+                res.status(500).send({ error: "Произошла ошибка сервера" });
+            });
+};
 
+/**
+ * отдает только учительские журналы
+ * @param req
+ * @param res
+ */
 const getTeacherJournals = (req, res) => {
     if (req.session.auth.role === roles.ADMIN || req.session.auth._id === req.query.id) {
         const { id } = req.query;
@@ -52,6 +66,12 @@ const getTeacherJournals = (req, res) => {
     } else res.status(403).send({ error: "Нет прав для выполнения операции" });
 };
 
+/**
+ * отдает 1 журнал
+ * @param req
+ * @param res
+ * @returns {Promise<any | never>}
+ */
 const getJournal = (req, res) =>
     Log.findById(req.query)
         .then(journal => {
@@ -77,12 +97,22 @@ const addJournal = (req, res) => {
     } else res.status(403).send({ error: "Нет прав для выполнения операции" });
 
 };
-
+/**
+ * удаляет журнал
+ * @param req
+ * @param res
+ * @returns {Promise<any | never>}
+ */
 const delJournal = (req, res) =>
     Log.findByIdAndDelete(req.body.id)
         .then(() => res.send())
         .catch(() => res.status(500).send({ error: "Произошла ошибка сервера" }));
 
+/**
+ * редактирует журнал
+ * @param req
+ * @param res
+ */
 const editJournal = (req, res) => {
     if (req.session.auth.role === roles.ADMIN || req.session.auth._id === req.body.owner) {
         Log.findByIdAndUpdate(req.body._id, req.body)

@@ -51,11 +51,13 @@
         props: {},
 
         data: () => ({
+            //содержимое формы авторизации
             authForm: {
                 login: "",
                 password: "",
                 valid: false,
             },
+            //правила валидации полей
             rules: {
                 login: [v => !!v || ""],
                 password: [
@@ -70,32 +72,14 @@
             this.init();
         },
 
-        computed:{
-            sessionUser(){
-                return this.$store.getters.authUser;
-            },
-
-            isLoggedIn(){
-                return this.$store.getters.isLoggedIn;
-            }
-        },
-
         methods: {
-
+            //шлем запрос серверу на проверку сессии если сессия есть авторизуем без логина и пароля
             init(){
                 this.$store.dispatch("getSessionUser")
                     .then(this.goHome)
                     .catch(this.clearStore);
             },
-
-            tryToLogin() {
-                if (this.sessionUser && this.isLoggedIn) {
-                    this.goHome();
-                } else {
-                   this.clearStore();
-                }
-            },
-
+            //очистка хранилища
             clearStore(){
                 this.$store.dispatch("clearStore");
             },

@@ -24,7 +24,7 @@ const authenticate = ({ role = roles.ADMIN, _id = "null", login = "admin", passw
     res.send(req.session.auth);
 };
 
-//методы запроса рейсов
+//авторизация
 const authorize = (req, res) => {
     const { login, password } = req.body;
 
@@ -47,14 +47,14 @@ const authorize = (req, res) => {
         });
     }
 };
-
+//выход
 const unAuthorize = (req, res) => {
     const { session } = req;
     session.auth = null;
 
     res.send();
 };
-
+//сессионный пользователь
 const getSessionUser = (req, res) => {
     if (req.session.auth) {
         res.send(req.session.auth);

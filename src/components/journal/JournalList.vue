@@ -147,14 +147,14 @@
 
         computed: {
             /**
-             * список рейсов
+             * список журналов
              * @returns {default.computed.flightList|(function())|getters.flightList|Array}
              */
             list(){
                 return this.$store.getters.journalList;
             },
             /**
-             * список рейсов с учетом фильтров
+             * список журналов с учетом фильтров
              * @returns {*}
              */
             filtredList(){
@@ -162,7 +162,7 @@
                     .filter(item => item.name.indexOf(this.filterWord) !== -1);
             },
             /**
-             * список рейсов с учетом пагинации
+             * список журналов с учетом пагинации
              */
             resultList(){
                 return this.filtredList
@@ -179,7 +179,9 @@
 
                     })
             },
-
+            /**
+             * список пользователей кроме собственника журнала и админов
+             */
             userList() {
                 return (this.form.data.owner ?
                     this.$store.getters.userList.filter(item => item._id !== this.form.data.owner) :
@@ -206,7 +208,7 @@
 
         methods: {
             /**
-             * запрос рейсов
+             * запрос списка журналов
              */
             init(){
                 this.loaded = false;
@@ -225,7 +227,7 @@
                 }
             },
             /**
-             * к рейсу
+             * к журналу
              * @param id
              */
             toJournal(e, id){

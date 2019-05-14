@@ -230,6 +230,7 @@
         },
 
         props: {
+            //id журнала
             journal_id: {
                 type: String,
                 required: true
@@ -255,12 +256,14 @@
         data: () => ({
             //признак того что загрузка завершена
             loaded: false,
+            //количество элементов на 1 страницы для бесконечной прокрутки
             pageLength: 25,
             roles,
             notFound:{
                 text: "Журналы не найдены",
                 advice: null
             },
+            //данные формы ученика
             form1: {
                 open: false,
                 valid: false,
@@ -271,6 +274,7 @@
                 },
                 _id: ""
             },
+            //данные формы урока
             form2: {
                 open: false,
                 valid: false,
@@ -282,10 +286,12 @@
                 },
                 _id: ""
             },
+            //диапазон дат
             interval: {
                 start:"",
                 stop: "",
             },
+            //правила валидации
             rules: {
                 name: [v => !!v || ""],
                 login: [v => !!v || ""],
@@ -298,10 +304,11 @@
         }),
 
         computed: {
+            //журнал по id
             journal() {
                 return this.$store.getters.journalById(this.journal_id) || {};
             },
-
+            //является ли авторизованный админом
             admin() {
                 return this.$store.getters.authUserIsAdmin;
             },
@@ -312,15 +319,14 @@
             list(){
                 return this.journal.students || [];
             },
-
+            /**
+             * уроки отфильтрованные по времени
+             */
             lessons() {
-                let les = (this.journal.lessons || [])
+                return (this.journal.lessons || [])
                     .sort((a, b) => new Date(a.date) - new Date(b.date))
-
-                if (this.interval.start) les = les.filter(item => new Date(item.date) >=  new Date(this.interval.start * 1000));
-                if (this.interval.stop) les = les.filter(item => new Date(item.date) <= new Date(this.interval.stop * 1000));
-
-                return les;
+                    .filter(item => new Date(item.date) >=  new Date(this.interval.start * 1000))
+                    .filter(item => new Date(item.date) <= new Date(this.interval.stop * 1000));
             },
             /**
              * список рейсов с учетом фильтров
@@ -343,7 +349,9 @@
                     .slice(0, this.pageLength * this.flightListPage < this.list.length ?
                        this.pageLength * this.flightListPage : this.list.length);
             },
-
+            /**
+             * слово введеное в строку поиска
+             */
             filterWord(){
                 return this.$store.getters.filterWord;
             },
@@ -368,7 +376,7 @@
 
         methods: {
             /**
-             * запрос рейсов
+             * запрос списка журналов
              */
             init(){
                 this.loaded = false;
@@ -386,19 +394,27 @@
                     $state.complete();
                 }
             },
-
+            /**
+             * очистка форм
+             */
             clearForm(n) {
                 this.$refs[`form${n}`].reset();
             },
-
+            /**
+             *закрытие форм
+             */
             closeForm(n) {
                 this[`form${n}`].open = false;
             },
-
+            /**
+             * открытие форм
+             */
             openForm(n) {
                 this[`form${n}`].open = true;
             },
-
+            /**
+             *завершение действий с формой
+             */
             cancel(n){
                 this.clearForm(n);
                 this.closeForm(n);
@@ -410,7 +426,10 @@
                     this.editJournal(n);
                 }
             },
-
+            /**
+             *
+             * заполнение формы студента текущими данными перед редактированием
+             */
             startEditStudent(id){
                 const user = this.list.find(item => item._id === id)
                 let form = this.form1,
@@ -423,7 +442,10 @@
 
                 this.openForm(1);
             },
-
+            /**
+             *
+             * заполнение формы урока текущими данными перед редактированием
+             */
             startEditLesson(id){
                 const lesson = this.lessons.find(item => item._id === id);
                 let form = this.form2,
@@ -436,7 +458,10 @@
 
                 this.openForm(2);
             },
-
+            /**
+             *
+             * общий метод по редактированию журнала создает/редактирует учеников/уроки в журнале
+             */
             editJournal(n) {
                 let journal = { ...this.journal },
                     form = { ...this[`form${n}`] };
@@ -463,7 +488,9 @@
                 this.$store.dispatch("editJournal", journal)
                     .then(() => this.cancel(n));
             },
-
+            /**
+             * удаление ученика
+             */
             removeStudent(id) {
                 let journal = { ...this.journal };
                 const index = journal.students.findIndex(student => student._id === id);
@@ -474,7 +501,9 @@
 
                 this.$store.dispatch("editJournal", journal);
             },
-
+            /**
+             * удаление урока
+             */
             removeLesson(id) {
                 let journal = { ...this.journal };
                 const index = journal.lessons.findIndex(lesson => lesson._id === id);
@@ -486,6 +515,9 @@
                 this.$store.dispatch("editJournal", journal);
             },
 
+            /**
+             * проставить/снять Н
+             */
             toggleVisit({ studentId, lessonId }) {
                 if (!this.admin){
                     const journal = { ...this.journal },
@@ -507,20 +539,25 @@
                     }
                 }
             },
-
+            /**
+             * установка диапахона выборки уроков
+             */
             updateInterval({ field, val }) {
                 if (field in this.interval){
                     this.interval[field] = val;
                 }
             },
             /**
-             * к рейсу
+             * к карточке студента
              * @param id
              */
             toStudent(id){
                 this.$router.push({name: "student", params: { id }});
             },
-
+            /**
+             * к карточке урока
+             * @param id
+             */
             toLesson(id){
                 this.$router.push({name: "lesson", params: { id }});
             },
