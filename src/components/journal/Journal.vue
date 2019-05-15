@@ -18,7 +18,7 @@
             </v-flex>
             <interval-picker @update="updateInterval"></interval-picker>
         </v-layout>
-        <v-flex v-if = "resultList.length || !loaded"
+        <v-flex v-if = "resultList.length || lessons.length ||  !loaded"
                 xs12 >
             <v-layout>
             </v-layout>
