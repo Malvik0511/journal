@@ -134,6 +134,28 @@
                                                   v-model="form1.data.parents"
                                     ></v-text-field>
                                 </v-flex>
+                                <v-flex xs12>
+                                    <v-text-field label="Адрес"
+                                                  required
+                                                  :rules="rules.name"
+                                                  v-model="form1.data.address"
+                                    ></v-text-field>
+                                </v-flex>
+                                <v-flex xs12>
+                                    <v-text-field label="Телефон"
+                                                  required
+                                                  mask="phone"
+                                                  prefix="+7"
+                                                  :rules="rules.phone"
+                                                  v-model="form1.data.phone"
+                                    ></v-text-field>
+                                </v-flex>
+                                <v-flex xs12>
+                                    <v-checkbox label="Медосмотр"
+                                                  required
+                                                  v-model="form1.data.medical"
+                                    ></v-checkbox>
+                                </v-flex>
                             </v-layout>
                         </v-container>
                         <small>*indicates required field</small>
@@ -271,6 +293,9 @@
                     firstName: "",
                     lastName: "",
                     parents: "",
+                    address: "",
+                    phone: "",
+                    medical: false
                 },
                 _id: ""
             },
@@ -299,6 +324,9 @@
                     v => !!v || "",
                     v =>
                         v && v.search(/[а-яА-ЯёЁ]/g) === -1 || "в пароле не должно быть кириллицы"
+                ],
+                phone: [
+                    v => v && v.length && v.length === 10 || "введите полный номер"
                 ]
             },
         }),
@@ -439,6 +467,9 @@
                 data.firstName = user.firstName;
                 data.lastName = user.lastName;
                 data.parents = user.parents;
+                data.address = user.address;
+                data.phone = user.phone;
+                data.medical = user.medical || false;
 
                 this.openForm(1);
             },

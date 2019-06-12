@@ -30,7 +30,10 @@ const schema = new mongoose.Schema({
         firstName: String,
         lastName: String,
         parents: String,
-        misses: [mongoose.Schema.Types.ObjectId]
+        misses: [mongoose.Schema.Types.ObjectId],
+        medical: Boolean,
+        address: String,
+        phone: String
     }]
 });
 
